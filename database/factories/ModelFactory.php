@@ -16,7 +16,7 @@ $factory->define(CodeProject\Entities\User::class, function ($faker) {
         'name'           => $faker->name,
         'email'          => $faker->email,
         'password'       => str_random(10),
-        'remember_token' => str_random(10),
+        'remember_token' => str_random(10)
     ];
 });
 
@@ -27,6 +27,18 @@ $factory->define(CodeProject\Entities\Client::class, function ($faker) {
         'email'       => $faker->email,
         'phone'       => $faker->phoneNumber,
         'address'     => $faker->address,
-        'obs'         => $faker->sentence,
+        'obs'         => $faker->sentence
+    ];
+});
+
+$factory->define(CodeProject\Entities\Project::class, function ($faker) {
+    return [
+        'owner_id'    => rand(1,10),
+        'client_id'   => rand(1,10),
+        'name'        => $faker->word,
+        'description' => $faker->sentence,
+        'progress'    => rand(1,100),
+        'status'      => rand(1,3),
+        'due_date'    => $faker->dateTime('now')
     ];
 });

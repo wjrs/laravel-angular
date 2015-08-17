@@ -49,4 +49,54 @@ class ProjectService
             ];
         }
     }
+
+    public function addMember(array $data, $id)
+    {
+        try {
+            $project = $this->repository->find($id);
+            $project->members()->attach($data);
+
+        } catch(ValidatorException $e) {
+            return [
+                'error'   => true,
+                'message' => $e->getMessageBag()
+            ];
+        }
+    }
+
+    public function removeMember(array $data, $id)
+    {
+        try {
+            $project = $this->repository->find($id);
+            $project->members()->detach($data);
+
+        } catch(ValidatorException $e) {
+            return [
+                'error'   => true,
+                'message' => $e->getMessageBag()
+            ];
+        }
+    }
+
+    public function isMember($id, $memberId)
+    {
+        try {
+            $project = $this->repository->with('members')->find($id);
+            $member  = $project->members()->find($memberId);
+
+            if (!empty($member)) {
+                return 'true';
+            } else {
+                return 'false';
+            }
+
+        } catch(ValidatorException $e) {
+            return [
+                'error'   => true,
+                'message' => $e->getMessageBag()
+            ];
+        }
+
+
+    }
 }

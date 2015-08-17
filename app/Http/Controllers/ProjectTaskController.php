@@ -2,24 +2,25 @@
 
 namespace CodeProject\Http\Controllers;
 
-use CodeProject\Repositories\ProjectRepository;
+use CodeProject\Repositories\ProjectTaskRepository;
 use CodeProject\Services\ProjectService;
+use CodeProject\Services\ProjectTaskService;
 use Illuminate\Http\Request;
 
-class ProjectController extends Controller
+class ProjectTaskController extends Controller
 {
 
     /**
      * @var ProjectRepository
      */
     private $repository;
-
     /**
      * @var ProjectService
      */
     private $service;
 
-    public function __construct(ProjectRepository $repository, ProjectService $service)
+
+    public function __construct(ProjectTaskRepository $repository, ProjectTaskService $service)
     {
         $this->repository = $repository;
         $this->service = $service;
@@ -31,10 +32,11 @@ class ProjectController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index($id)
     {
-        return $this->repository->all();
+        return $this->repository->findWhere(['project_id' => $id]);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -53,11 +55,12 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function show($id)
+    public function show($id, $taskId)
     {
-        return $this->repository->with(['client', 'user'])->find($id);
+        return $this->repository->findWhere(['project_id' => $id, 'id' => $taskId]);
 
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -66,9 +69,9 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $taskId)
     {
-        $this->service->update($request->all(), $id);
+        $this->service->update($request->all(), $id, $taskId);
     }
 
     /**
@@ -77,23 +80,8 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy($id, $taskId)
     {
-        $this->repository->find($id)->delete();
-    }
-
-    public function isMember($id, $memberId)
-    {
-        return $this->service->isMember($id, $memberId);
-    }
-
-    public function addMember(Request $request, $id)
-    {
-        return $this->service->addMember($request->all(), $id);
-    }
-
-    public function removeMember(Request $request, $id)
-    {
-        $this->service->removeMember($request->all(), $id);
+        $this->repository->find($id)->delete($taskId);
     }
 }

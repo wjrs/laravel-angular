@@ -55,8 +55,7 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        return $this->repository->with(['client', 'user'])->find($id);
-
+        return $this->repository->with(['notes', 'members', 'tasks'])->find($id);
     }
 
     /**
@@ -79,7 +78,11 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        $this->repository->find($id)->delete();
+        $project = $this->repository->find($id);
+        $project->notes()->delete();
+        $project->members()->detach();
+        $project->tasks()->delete();
+        $project->delete();
     }
 
     public function isMember($id, $memberId)

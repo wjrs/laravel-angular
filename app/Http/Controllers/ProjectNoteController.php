@@ -4,18 +4,17 @@ namespace CodeProject\Http\Controllers;
 
 use CodeProject\Repositories\ProjectNoteRepository;
 use CodeProject\Services\ProjectNoteService;
-use CodeProject\Services\ProjectService;
 use Illuminate\Http\Request;
 
 class ProjectNoteController extends Controller
 {
 
     /**
-     * @var ProjectRepository
+     * @var ProjectNoteRepository
      */
     private $repository;
     /**
-     * @var ProjectService
+     * @var ProjectNoteService
      */
     private $service;
 
@@ -71,7 +70,7 @@ class ProjectNoteController extends Controller
      */
     public function update(Request $request, $id, $noteId)
     {
-        $this->service->update($request->all(), $id, $noteId);
+        $this->service->update($request->all(), $noteId);
     }
 
     /**
@@ -82,6 +81,6 @@ class ProjectNoteController extends Controller
      */
     public function destroy($id, $noteId)
     {
-        $this->repository->find($id)->delete($noteId);
+        $this->repository->find($noteId)->delete(['project_id'=>$id]);
     }
 }
